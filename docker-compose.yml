@@ -1,8 +1,19 @@
 version: "3.9"
 services:
+  telegraf:
+    container_name: "telegraf"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./docker/telegraf.conf:/etc/telegraf/telegraf.conf
+      - ./docker/config.conf:/etc/telegraf/389ds-db-input.conf
   ds:
-    name: "ds"
+    container_name: "ds"
     image: "389ds/dirsrv:latest"
+    volumes:
+      - ./docker/bootstrap-389ds.sh:/usr/sbin/bootstrap-389ds.sh
+      - ./docker/data:/data
     environment:
       - DS_DM_PASSWORD=password
     ports:

@@ -266,7 +266,7 @@ func (o *ds389) gatherDatabaseStats(l *ldap.Conn) (map[string]interface{}, error
 		availableDbs = append(availableDbs, db)
 	}
 
-	for _, db := range o.Dbtomonitor {
+	for _, db := range availableDbs {
 		searchDbMonitor := fmt.Sprintf("cn=monitor,cn=%s,cn=ldbm database,cn=plugins,cn=config", db)
 		searchDbRequest := ldap.NewSearchRequest(
 			searchDbMonitor,
@@ -374,5 +374,5 @@ func mergeMaps(a map[string]interface{}, b map[string]interface{}) map[string]in
 }
 
 func init() {
-	inputs.Add("389ds_db_metrics", func() telegraf.Input { return NewDs389() })
+	inputs.Add("ds389_db", func() telegraf.Input { return NewDs389() })
 }

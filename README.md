@@ -28,12 +28,37 @@ Original Pull Request: https://github.com/influxdata/telegraf/pull/6117
   - [X] Per Database
 - [ ] Connections
 
+### Deploying
+
+#### Docker ( Recommended )
+
+A telegraf + this execd shim is published to ()
+
+To build your own custom container with multiple plugins then see Dockerfile for an example. See 
+docker-compose.yml for an example for a local environment when running 389ds in a container.
+
+#### Manual
+
+A static binary can be produced and deployed for a locally installed telegraf. To do this run:
+
+```shell
+go build -o telegraf-execd-389ds-db-input cmd/main.go
+```
+
+### Developing
+
+When developing locally please follow the below steps:
+
+1. docker-compose up --build
+2. < wait for 389ds instance to provision >
+3. docker exec -it ds "/bin/sh -c 'bootstap-389ds.sh'"
 
 ### Configuration:
 
 ```toml
-[[inputs.ds389_db_metrics]]
+[[inputs.ds389_db]]
   # Connection URL to 389DS Server
+  # ldap / ldaps / ldapi supported
   url = "ldap://localhost:389"
 
   # Enable starttls, not needed for ldaps/ldapi
@@ -120,10 +145,9 @@ An 389DS 2.x.x server will provide these metrics:
   - cachehits
   - slavehits
 
-If you enable the Connection status (status = true) a full connection status detail will be added to the metrics.
-The idea is to monitor all metrics provided by the 389 Console.
+If you enable the `expand_connection` a full connection status detail will be added to the metrics.
 
-### Connection status metrics
+### Expanded Connections
 
 If `expand_connections = true` the `connection` attribute will be parsed in this metric:
 
